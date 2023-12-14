@@ -58,8 +58,12 @@ const phoneBlurHandler = (evt) => {
   const numbersValueLength = getNumbersValue(evt.target.value).length;
   console.log(numbersValueLength);
   if (numbersValueLength < MAX_LENGTH) {
+    phoneInput.classList.remove('phone-number__input--ok');
+    phoneInput.classList.add('phone-number__input--error');
     phoneInput.setCustomValidity(`Введите пожалуйста еще ${MAX_LENGTH - numbersValueLength} символов`);
   } else {
+    phoneInput.classList.remove('phone-number__input--error')
+    phoneInput.classList.add('phone-number__input--ok');
     phoneInput.setCustomValidity('');
   }
   phoneInput.reportValidity();
