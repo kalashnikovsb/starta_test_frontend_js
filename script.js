@@ -1,6 +1,6 @@
 const phoneInput = document.querySelector('.phone-number__input');
 const MAX_LENGTH = 11;
-const ESC_KEYCODE = BACKSPACE_KEYCODE;
+const BACKSPACE_KEYCODE = 8;
 isPasted = false;
 
 
@@ -60,7 +60,6 @@ const phoneBackspaceHandler = (evt) => {
   if (evt.keyCode === BACKSPACE_KEYCODE && (inputValue.length === 2 || inputValue.length === 1)) {
     evt.target.value = '';
   }
-  console.log(inputValue.length);
   checkInputLength(evt);
 };
 
@@ -71,7 +70,6 @@ const phonePasteHandler = () => {
 
 
 const phoneInputHandler = (evt) => {
-  console.log('!!!');
   let input = evt.target;
   input.setCustomValidity('');
   let numbersValue = getNumbersValue(input.value);
