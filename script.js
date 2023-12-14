@@ -1,5 +1,6 @@
 const phoneInput = document.querySelector('.phone-number__input');
 const MAX_LENGTH = 11;
+const ESC_KEYCODE = BACKSPACE_KEYCODE;
 isPasted = false;
 
 
@@ -56,9 +57,10 @@ const getFormattedData = (inputValue, isPasted) => {
 const phoneBackspaceHandler = (evt) => {
   const inputValue = getNumbersValue(evt.target.value);
   // 2ка это длина строки, когда первый символ это 7ка от маски номера "+7", а второе число последний символ при удалении
-  if (evt.keyCode === 8 && (inputValue.length === 2 || inputValue.length ===1)) {
+  if (evt.keyCode === BACKSPACE_KEYCODE && (inputValue.length === 2 || inputValue.length === 1)) {
     evt.target.value = '';
   }
+  console.log(inputValue.length);
   checkInputLength(evt);
 };
 
@@ -69,6 +71,7 @@ const phonePasteHandler = () => {
 
 
 const phoneInputHandler = (evt) => {
+  console.log('!!!');
   let input = evt.target;
   input.setCustomValidity('');
   let numbersValue = getNumbersValue(input.value);
