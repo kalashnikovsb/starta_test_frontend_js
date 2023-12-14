@@ -1,4 +1,5 @@
 const phoneInput = document.querySelector('.phone-number__input');
+const MAX_LENGTH = 11;
 isPasted = false;
 
 // Проверка на число
@@ -12,7 +13,7 @@ const getNumbersValue = (value) => {
 
 
 // Нужна для удаления последнего символа при очистке поля
-const phoneBackspacePressHandler = (evt) => {
+const phoneBackspaceHandler = (evt) => {
   const inputValue = getNumbersValue(evt.target.value);
   // 2ка это длина строки, когда первый символ это 7ка от маски номера "+7", а второе число последний символ при удалении
   if (evt.keyCode === 8 && inputValue.length === 2) {
@@ -21,17 +22,10 @@ const phoneBackspacePressHandler = (evt) => {
 };
 
 
-// Обработчик копирования
-const phonePasteHandler = (evt) => {
-  isPasted = true;
-};
-
-
 // Непосредственное форматирование
 const getFormattedData = (inputValue, isPasted) => {
   const firstSymbols = '+7 (';
   let result = '';
-
   // Если значение было вставлено, то первый символ не обрезается
   // Если ввод начался с 7ки, то +7 не вставляется вначале
   if (inputValue.length === 1) {
@@ -47,16 +41,35 @@ const getFormattedData = (inputValue, isPasted) => {
     result += '-' + ((isPasted) ? inputValue.substring(6, 8) : inputValue.substring(7, 9));
   }
   if (inputValue.length >= 10) {
-    result += '-' + ((isPasted) ? inputValue.substring(8, 10) : inputValue.substring(9, 11));
+    result += '-' + ((isPasted) ? inputValue.substring(8, 10) : inputValue.substring(9, MAX_LENGTH));
   }
-
   return result;
 };
 
 
+// Обработчик копирования
+const phonePasteHandler = (evt) => {
+  isPasted = true;
+};
+
+
+// Обработчик блюра
+const phoneBlurHandler = (evt) => {
+  const numbersValueLength = getNumbersValue(evt.target.value).length;
+  console.log(numbersValueLength);
+  if (numbersValueLength < MAX_LENGTH) {
+    phoneInput.setCustomValidity(`Введите пожалуйста еще ${MAX_LENGTH - numbersValueLength} символов`);
+  } else {
+    phoneInput.setCustomValidity('');
+  }
+  phoneInput.reportValidity();
+};
+
+
+// Обработчик инпута
 const phoneInputHandler = (evt) => {
   let input = evt.target;
-  // let inputValue = evt.target.value;
+  input.setCustomValidity('');
   let numbersValue = getNumbersValue(input.value);
   const selectionStart = input.selectionStart;
 
@@ -84,7 +97,6 @@ const phoneInputHandler = (evt) => {
 
 
 phoneInput.addEventListener('input', phoneInputHandler);
-phoneInput.addEventListener('keydown', phoneBackspacePressHandler);
+phoneInput.addEventListener('keydown', phoneBackspaceHandler);
 phoneInput.addEventListener('paste', phonePasteHandler);
-phoneInput.addEventListener('focus', phoneFocusHandler);
 phoneInput.addEventListener('blur', phoneBlurHandler);
