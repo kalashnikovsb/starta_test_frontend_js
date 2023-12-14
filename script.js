@@ -2,7 +2,7 @@ const phoneInput = document.querySelector('.phone-number__input');
 const MAX_LENGTH = 11;
 isPasted = false;
 
-// Проверка на число
+
 const isNumber = (symbol) => (!isNaN(+symbol) && symbol !== ' ') ? true : false;
 
 
@@ -12,17 +12,23 @@ const getNumbersValue = (value) => {
 };
 
 
-// Нужна для удаления последнего символа при очистке поля
-const phoneBackspaceHandler = (evt) => {
-  const inputValue = getNumbersValue(evt.target.value);
-  // 2ка это длина строки, когда первый символ это 7ка от маски номера "+7", а второе число последний символ при удалении
-  if (evt.keyCode === 8 && inputValue.length === 2) {
-    evt.target.value = '';
+// Валидация длины номера
+const checkInputLength = (evt) => {
+  const numbersValueLength = getNumbersValue(evt.target.value).length;
+  console.log(numbersValueLength);
+  if (numbersValueLength < MAX_LENGTH) {
+    phoneInput.classList.remove('phone-number__input--ok');
+    phoneInput.classList.add('phone-number__input--error');
+    phoneInput.setCustomValidity(`Введите пожалуйста еще ${MAX_LENGTH - numbersValueLength} символов`);
+  } else {
+    phoneInput.classList.remove('phone-number__input--error')
+    phoneInput.classList.add('phone-number__input--ok');
+    phoneInput.setCustomValidity('');
   }
+  phoneInput.reportValidity();
 };
 
 
-// Непосредственное форматирование
 const getFormattedData = (inputValue, isPasted) => {
   const firstSymbols = '+7 (';
   let result = '';
@@ -47,30 +53,22 @@ const getFormattedData = (inputValue, isPasted) => {
 };
 
 
-// Обработчик копирования
+// Нужно для удаления последнего символа при очистке поля
+const phoneBackspaceHandler = (evt) => {
+  const inputValue = getNumbersValue(evt.target.value);
+  // 2ка это длина строки, когда первый символ это 7ка от маски номера "+7", а второе число последний символ при удалении
+  if (evt.keyCode === 8 && (inputValue.length === 2 || inputValue.length ===1)) {
+    evt.target.value = '';
+    checkInputLength(evt );
+  }
+};
+
+
 const phonePasteHandler = (evt) => {
   isPasted = true;
 };
 
 
-// Обработчик блюра
-const phoneBlurHandler = (evt) => {
-  const numbersValueLength = getNumbersValue(evt.target.value).length;
-  console.log(numbersValueLength);
-  if (numbersValueLength < MAX_LENGTH) {
-    phoneInput.classList.remove('phone-number__input--ok');
-    phoneInput.classList.add('phone-number__input--error');
-    phoneInput.setCustomValidity(`Введите пожалуйста еще ${MAX_LENGTH - numbersValueLength} символов`);
-  } else {
-    phoneInput.classList.remove('phone-number__input--error')
-    phoneInput.classList.add('phone-number__input--ok');
-    phoneInput.setCustomValidity('');
-  }
-  phoneInput.reportValidity();
-};
-
-
-// Обработчик инпута
 const phoneInputHandler = (evt) => {
   let input = evt.target;
   input.setCustomValidity('');
@@ -81,7 +79,6 @@ const phoneInputHandler = (evt) => {
     input.value = '';
     return;
   }
-
   if (input.value.length !== selectionStart) {
     if (!isNumber(evt.data)) {
       input.value = numbersValue;
@@ -95,12 +92,14 @@ const phoneInputHandler = (evt) => {
   }
 
   const formattedData = getFormattedData(numbersValue, isPasted);
-  isPasted = false;
+  checkInputLength(evt);
   input.value = formattedData;
+  isPasted = false;
 };
 
 
-phoneInput.addEventListener('input', phoneInputHandler);
-phoneInput.addEventListener('keydown', phoneBackspaceHandler);
+phoneInput.addEventListener('blur', (evt) => checkInputLength(evt));
+// phoneInput.addEventListener('focus', phoneFocusHandler);
 phoneInput.addEventListener('paste', phonePasteHandler);
-phoneInput.addEventListener('blur', phoneBlurHandler);
+phoneInput.addEventListener('keydown', phoneBackspaceHandler);
+phoneInput.addEventListener('input', phoneInputHandler);
