@@ -15,7 +15,6 @@ const getNumbersValue = (value) => {
 // Валидация длины номера
 const checkInputLength = (evt) => {
   const numbersValueLength = getNumbersValue(evt.target.value).length;
-  console.log(numbersValueLength);
   if (numbersValueLength < MAX_LENGTH) {
     phoneInput.classList.remove('phone-number__input--ok');
     phoneInput.classList.add('phone-number__input--error');
@@ -59,12 +58,12 @@ const phoneBackspaceHandler = (evt) => {
   // 2ка это длина строки, когда первый символ это 7ка от маски номера "+7", а второе число последний символ при удалении
   if (evt.keyCode === 8 && (inputValue.length === 2 || inputValue.length ===1)) {
     evt.target.value = '';
-    checkInputLength(evt );
   }
+  checkInputLength(evt);
 };
 
 
-const phonePasteHandler = (evt) => {
+const phonePasteHandler = () => {
   isPasted = true;
 };
 
@@ -92,14 +91,13 @@ const phoneInputHandler = (evt) => {
   }
 
   const formattedData = getFormattedData(numbersValue, isPasted);
-  checkInputLength(evt);
   input.value = formattedData;
+  checkInputLength(evt);
   isPasted = false;
 };
 
 
 phoneInput.addEventListener('blur', (evt) => checkInputLength(evt));
-// phoneInput.addEventListener('focus', phoneFocusHandler);
 phoneInput.addEventListener('paste', phonePasteHandler);
 phoneInput.addEventListener('keydown', phoneBackspaceHandler);
 phoneInput.addEventListener('input', phoneInputHandler);
