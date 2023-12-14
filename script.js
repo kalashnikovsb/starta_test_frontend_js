@@ -1,4 +1,4 @@
-const phoneInput = document.querySelector('.phone-number');
+const phoneInput = document.querySelector('.phone-number__input');
 isPasted = false;
 
 // Проверка на число
@@ -86,3 +86,5 @@ const phoneInputHandler = (evt) => {
 phoneInput.addEventListener('input', phoneInputHandler);
 phoneInput.addEventListener('keydown', phoneBackspacePressHandler);
 phoneInput.addEventListener('paste', phonePasteHandler);
+phoneInput.addEventListener('focus', phoneFocusHandler);
+phoneInput.addEventListener('blur', phoneBlurHandler);

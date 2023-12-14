@@ -3,6 +3,14 @@ body {
 }
 
 .phone-number {
+
+}
+
+.phone-number__label {
+
+}
+
+.phone-number__input {
     padding: 5px;
     font-size: 16px;
 }
